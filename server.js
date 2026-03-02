@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const http = require('http');
 
 // Import logic từ các file game
 const hitbanxanh = require('./hitbanxanh_logic');
@@ -103,4 +104,16 @@ app.listen(PORT, () => {
     hitbanxanh.startConnection();
     hitmd5.startConnection();
     sun.startConnection();
+
+    // --- Cơ chế tự Ping để chống ngủ trên Render (Gói Free) ---
+    const RENDER_EXTERNAL_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+
+    setInterval(() => {
+        console.log(`[💓] Đang tự Ping để giữ server hoạt động: ${new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}`);
+        http.get(RENDER_EXTERNAL_URL, (res) => {
+            // Chỉ cần request thành công
+        }).on('error', (err) => {
+            console.error('[❌] Lỗi khi tự Ping:', err.message);
+        });
+    }, 120000); // 2 phút ping 1 lần
 });
