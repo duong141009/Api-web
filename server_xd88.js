@@ -293,14 +293,16 @@ app.listen(PORT, () => {
     // Tự ping để chống ngủ (Render)
     const RENDER_EXTERNAL_URL = process.env.RENDER_EXTERNAL_URL;
     if (RENDER_EXTERNAL_URL) {
-        setInterval((RENDER_EXTERNAL_URL) => {
-            axios.get()
+        setInterval(() => {
+            axios.get(RENDER_EXTERNAL_URL)
                 .then(res => {
-                    console.log(`[📡] Self-ping XD88 (status: ${res.status})`);
+                    console.log(`[📡] Tự ping (status: ${res.status})`);
                 })
                 .catch(err => {
-                    console.error('[⚠️] Self-ping error:', err.message);
+                    console.error('[⚠️] Lỗi tự ping:', err.message);
                 });
-        }, 5 * 60 * 1000);
+        }, 5 * 60 * 1000); // 5 phút/lần
+    } else {
+        console.log('[ℹ️] Cấu hình RENDER_EXTERNAL_URL để server không bị ngủ.');
     }
 });
